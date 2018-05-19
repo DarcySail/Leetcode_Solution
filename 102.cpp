@@ -21,15 +21,58 @@ class Solution
   public:
     vector<vector<int>> levelOrder(TreeNode *root)
     {
-        Solution sol;
-        TreeNode *root;
-        cout << sol.diameterOfBinaryTree(root);
+        vector<vector<int>> result;
+        if (!root) {
+            return result;
+        }
+        int level_num = 0;
+        vector<TreeNode *> queue;
+
+        queue.push_back(root);
+        while (true) {
+            vector<TreeNode *> level_queue;
+            result.push_back(vector<int>());
+            while (queue.size()) {
+                if (queue[0]->left) {
+                    level_queue.push_back(queue[0]->left);
+                }
+                if (queue[0]->right) {
+                    level_queue.push_back(queue[0]->right);
+                }
+                result[level_num].push_back(queue[0]->val);
+                queue.erase(queue.begin());
+            }
+            if (level_queue.size() == 0) {
+                break;
+            }
+            queue = level_queue;
+            ++level_num;
+        }
+
+        return result;
     }
 };
 
 int main()
 {
     Solution sol;
-    TreeNode *root;
-    cout << sol.diameterOfBinaryTree(root);
+    TreeNode root(3);
+    TreeNode a(9);
+    TreeNode b(30);
+    TreeNode c(15);
+    TreeNode d(7);
+
+    root.left = &a;
+    root.right = &b;
+    b.left = &c;
+    b.right = &d;
+
+    vector<vector<int>> result;
+    result = sol.levelOrder(&root);
+    for (size_t i = 0; i < result.size(); ++i) {
+        for (size_t j = 0; j < result[i].size(); ++j) {
+            cout << result[i][j] << ' ';
+        }
+        cout << endl;
+    }
 }
