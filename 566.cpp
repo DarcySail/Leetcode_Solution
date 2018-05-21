@@ -13,17 +13,36 @@ using namespace std;
 class Solution
 {
   public:
-    vector<vector<int>> matrixReshape(vector<vector<int>> &nums, int r, int c)
+    vector<int> nextGreaterElement(vector<int> &findNums, vector<int> &nums)
     {
-        int row = nums.size(), col = nums[0].size();
-        if (r * c != nums.size() * nums[0].size()) {
-            return nums;
+        if (findNums.size() == 0 || nums.size() == 0) {
+            return vector<int>();
+        }
+        int len = nums.size();
+        unordered_map<int, int> dict;
+        vector<int> greater(len, -1);
+        greater[len - 1] = -1;
+        dict[nums[len - 1]] = len - 1;
+
+        for (int i = len - 2; i >= 0; --i) {
+            dict[nums[i]] = i;
+            for (int it = i + 1; it < len;) {
+                if (nums[i] < nums[it]) {
+                    greater[i] = it;
+                    break;
+                } else if (greater[it] != -1) {
+                    it = greater[it];
+                } else if (greater[it] == -1) {
+                    greater[it] = -1;
+                    break;
+                }
+            }
         }
 
-        vector<vector<int>> result(r, vector<int>(c, 0));
-        int size = row * col;
-        for (int i = 0; i < size; ++i) {
-            result[i / c][i - i / c * c] = nums[i / col][i - i / col * col];
+        vector<int> result(findNums.size(), 0);
+        for (int i = 0; i < findNums.size(); ++i) {
+            int val = greater[dict[findNums[i]]];
+            result[i] = val == -1 ? -1 : nums[val];
         }
         return result;
     }
@@ -32,7 +51,8 @@ class Solution
 int main()
 {
     Solution sol;
+    vector<int> a({4, 1, 2});
+    vector<int> b({1, 3, 4, 2});
 
-    cout << sol.findComplement(5) << endl;
-    cout << sol.findComplement(1) << endl;
+    sol.nextGreaterElement(a, b);
 }
