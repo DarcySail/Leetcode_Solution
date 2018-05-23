@@ -32,6 +32,7 @@ int main()
 {
     Solution sol;
 
+    cout << sol.hasAlternatingBits(0) << endl;
     cout << sol.hasAlternatingBits(5) << endl;
     cout << sol.hasAlternatingBits(7) << endl;
     cout << sol.hasAlternatingBits(11) << endl;
