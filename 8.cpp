@@ -30,6 +30,7 @@ int atoi(const char *str)
     }
     return base * sign;
 }
+
 // ugly code...
 class Solution
 {
