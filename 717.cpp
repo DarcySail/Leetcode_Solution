@@ -25,4 +25,9 @@ class Solution
     }
 };
 
-int main() { Solution sol; }
+int main()
+{
+    Solution sol;
+    vector<int> arr({1});
+    sol.isOneBitCharacter(arr);
+}
