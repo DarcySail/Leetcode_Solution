@@ -17,6 +17,23 @@ struct TreeNode {
     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
+// 仔细阅读他的代码，发现他改变了顺序。
+// 我的代码严格按照题给顺序书写。
+// other's brilliant sol
+TreeNode *prev = NULL;
+
+void flatten(TreeNode *root)
+{
+    if (root == NULL)
+        return;
+    flatten(root->right);
+    flatten(root->left);
+    root->right = prev;
+    root->left = NULL;
+    prev = root;
+}
+
+// my ugly code
 class Solution
 {
   public:
