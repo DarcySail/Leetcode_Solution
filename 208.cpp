@@ -9,31 +9,60 @@
 
 using namespace std;
 
-class TrieNode {
-	char node[26];
-}
-
-class Trie {
-public:
-	char *root;
+class Trie
+{
+  public:
+    struct TrieNode {
+        TrieNode(bool _is_leaf)
+        {
+            is_leaf = _is_leaf;
+            con = vector<TrieNode *>(26, NULL);
+        }
+        vector<TrieNode *> con;
+        bool is_leaf;
+    };
+    TrieNode *root;
     /** Initialize your data structure here. */
-    Trie() {
-        
-    }
-    
+    Trie() { root = new TrieNode(false); }
+
     /** Inserts a word into the trie. */
-    void insert(string word) {
-        
+    void insert(string word)
+    {
+        TrieNode *it = root;
+        for (size_t i = 0; i < word.length(); ++i) {
+            if (!it->con[word[i] - 'a']) {
+                it->con[word[i] - 'a'] = new TrieNode(false);
+            }
+            it = it->con[word[i] - 'a'];
+        }
+        it->is_leaf = true;
     }
-    
+
     /** Returns if the word is in the trie. */
-    bool search(string word) {
-        
+    bool search(string word)
+    {
+        TrieNode *it = root;
+        for (size_t i = 0; i < word.length(); ++i) {
+            it = it->con[word[i] - 'a'];
+            if (!it) {
+                return false;
+            }
+        }
+        return it->is_leaf;
     }
-    
-    /** Returns if there is any word in the trie that starts with the given prefix. */
-    bool startsWith(string prefix) {
-        
+
+    /** Returns if there is any word in the trie that starts with the given
+     * prefix. */
+    bool startsWith(string prefix)
+    {
+        TrieNode *it = root;
+        for (size_t i = 0; i < prefix.length(); ++i) {
+            it = it->con[prefix[i] - 'a'];
+            if (!it) {
+                return false;
+            }
+        }
+        return true;
     }
 };
 
@@ -47,59 +76,9 @@ public:
 
 int main()
 {
-    Solution sol;
-
-sol.isSubtree(&a, &a2);
+    Trie *obj = new Trie();
+    //obj->insert("suhang");
+    cout << obj->search("s") << endl;
+    cout << obj->startsWith("su") << endl;
+    cout << obj->startsWith("au") << endl;
 }
-
-// Subtree of Another binary search Tree
-// class Solution
-//{
-//  public:
-//    bool isSubtree(TreeNode *s, TreeNode *t)
-//    {
-//        if (!s || !t) {
-//            return !t;
-//        }
-//        TreeNode *cur;
-//        cur = find_node(s, t);
-//        if (!cur) {
-//            return false;
-//        }
-//
-//        return is_same(cur, t);
-//    }
-//
-//    bool is_same(TreeNode *s, TreeNode *t)
-//    {
-//        if (!s || !t) {
-//            return !s && !t;
-//        }
-//
-//        if (s->val != t->val) {
-//            return false;
-//        }
-//
-//        bool left, right;
-//        left = is_same(s->left, t->left);
-//        right = is_same(s->right, t->right);
-//        return left && right;
-//    }
-//
-//    TreeNode *find_node(TreeNode *s, TreeNode *t)
-//    {
-//        TreeNode *cur = s;
-//        int val = t->val;
-//        while (cur) {
-//            if (val < cur->val) {
-//                cur = cur->left;
-//            } else if (val > cur->val) {
-//                cur = cur->right;
-//            } else {
-//                return cur;
-//            }
-//        }
-//
-//        return NULL;
-//    }
-//};
