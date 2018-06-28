@@ -28,7 +28,7 @@ class Solution
         ListNode head(0);
         head.next = l1;
         last = &head;
-        it1 = l1, it2 = l2, last;
+        it1 = l1, it2 = l2;
         while (it2) {
             if (!it1) {
                 last->next = it2;
