@@ -14,34 +14,30 @@ class Solution
   public:
     string minWindow(string s, string t)
     {
-        if (s.size() == 0 || t.size() == 0)
+        if (s.length() == 0 || t.length() == 0)
             return "";
-        vector<int> remaining(128, 0);
-        int required = t.size();
-        for (int i = 0; i < required; i++)
-            remaining[t[i]]++;
-        // left is the start index of the min-length substring ever found
-        int min = INT_MAX, start = 0, left = 0, i = 0;
-        while (i <= s.size() && start < s.size()) {
-            if (required) {
-                if (i == s.size())
-                    break;
-                remaining[s[i]]--;
-                if (remaining[s[i]] >= 0)
-                    required--;
-                i++;
-            } else {
-                if (i - start < min) {
-                    min = i - start;
-                    left = start;
+        vector<int> dict(256, 0);
+        size_t left = 0, right = 0;
+        int win_size = t.length();
+        for (auto i : t)
+            ++dict[i];
+        string result;
+        size_t min_len = INT_MAX;
+        for (; right < s.length(); ++right) {
+            if (dict[s[right]]-- > 0) {
+                --win_size;
+            }
+            for (; win_size == 0; ++left) {
+                if (++dict[s[left]] > 0) {
+                    ++win_size;
+                    if (min_len > right - left + 1) {
+                        min_len = right - left + 1;
+                        result = s.substr(left, min_len);
+                    }
                 }
-                remaining[s[start]]++;
-                if (remaining[s[start]] > 0)
-                    required++;
-                start++;
             }
         }
-        return min == INT_MAX ? "" : s.substr(left, min);
+        return result;
     }
 };
 
@@ -53,15 +49,18 @@ int main()
     string b = "CAB";
     string c = "";
     string d = "ADF";
-    string f = "ADOBECODEANC";
     string e = "ABC";
+    string f = "ADOBECODEANC";
+    string g = "cabwefgewcwaefgcf";
+    string h = "cae";
     cout << sol.minWindow(_a, e) << endl;
-    // cout << sol.minWindow(a, e) << endl;
-    // cout << sol.minWindow(b, e) << endl;
-    // cout << sol.minWindow(c, e) << endl;
-    // cout << sol.minWindow(d, e) << endl;
-    // cout << sol.minWindow(e, e) << endl;
+    cout << sol.minWindow(a, e) << endl;
+    cout << sol.minWindow(b, e) << endl;
+    cout << sol.minWindow(c, e) << endl;
+    cout << sol.minWindow(d, e) << endl;
+    cout << sol.minWindow(e, e) << endl;
     cout << sol.minWindow(f, e) << endl;
+    cout << sol.minWindow(g, h) << endl;
 }
 
 // rubish 2
@@ -226,5 +225,41 @@ int main()
 //
 //        return s.substr(idx_for_filter[left],
 //                        idx_for_filter[right] - idx_for_filter[left] + 1);
+//    }
+//};
+
+// class Solution
+//{
+//  public:
+//    string minWindow(string s, string t)
+//    {
+//        if (s.size() == 0 || t.size() == 0)
+//            return "";
+//        vector<int> remaining(128, 0);
+//        int required = t.size();
+//        for (int i = 0; i < required; i++)
+//            remaining[t[i]]++;
+//        // left is the start index of the min-length substring ever found
+//        int min = INT_MAX, start = 0, left = 0, i = 0;
+//        while (i <= s.size() && start < s.size()) {
+//            if (required) {
+//                if (i == s.size())
+//                    break;
+//                remaining[s[i]]--;
+//                if (remaining[s[i]] >= 0)
+//                    required--;
+//                i++;
+//            } else {
+//                if (i - start < min) {
+//                    min = i - start;
+//                    left = start;
+//                }
+//                remaining[s[start]]++;
+//                if (remaining[s[start]] > 0)
+//                    required++;
+//                start++;
+//            }
+//        }
+//        return min == INT_MAX ? "" : s.substr(left, min);
 //    }
 //};
